@@ -27,9 +27,9 @@ Will cd into the directory specified.
 Same as calling `z -l` from the command-line except the list is
 interactive. You can navigate the list like a normal buffer. However:
 
-* \<enter> or <LeftRelease> Sets directory as CWD
-* \<c-o> Opens the directory in a new window
-* \<c-s> Opens the directory in a new vertically-split window
+* `enter` Sets directory as CWD
+* `s` Opens the directory in a new window
+* `v` Opens the directory in a new vertically-split window
 
 
 ## License
