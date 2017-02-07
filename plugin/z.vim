@@ -11,7 +11,6 @@ if exists("g:loaded_z")
 endif
 let g:loaded_z = 1
 
-
 " `z`-native preferences
 
 if exists("g:z_data")
@@ -25,22 +24,14 @@ if exists("g:z_exclude_dirs")
 endif
 
 
-" Override the built-in cd command to update the index
-
-fun! s:CD(directory)
-  exec '!cd '.directory
-  exec 'cd '.directory
-endfun
-
-cabbrev cd <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'CD' : 'cd')<CR>
-
-
 " Takes a list of regular expressions and returns a list
 " of paths and weights.
 
+let s:z_sh = expand('<sfile>:p') . '.sh'
+
 fun! s:list(list)
   let regexes = shellescape(join(a:list))
-  let list = split(system('_z -l '.regexes), '\n')
+  let list = split(system(s:z_sh . '  -l ' . regexes), '\n')
   return list
 endfun
 
@@ -85,7 +76,7 @@ fun! s:InteractiveList(...)
   " NOTE: These mappings might not be final. I'll have to check out some
   "       best practises. Also the mapping itself is pretty ugly.
 
-  noremap <buffer> <silent> <enter> :exec ':let ZDIR=<SID>pickDir("'.getline(".").'")'<cr>:exec 'cd '.ZDIR<cr>:q<cr>
+  noremap <buffer> <silent> <enter> :exec ':let ZDIR=<SID>pickDir("'.getline(".").'")'<cr>:q<cr>:exec 'cd '.ZDIR<cr>
   noremap <buffer> <silent> <LeftRelease> :exec ':let ZDIR=<SID>pickDir("'.getline(".").'")'<cr>:q<cr>:exec ':new '.ZDIR<cr>
   noremap <buffer> <silent> <c-o> :exec ':let ZDIR=<SID>pickDir("'.getline(".").'")'<cr>:q<cr>:exec ':new '.ZDIR<cr>
   noremap <buffer> <silent> <c-s> :exec ':let ZDIR=<SID>pickDir("'.getline(".").'")'<cr>:q<cr>:exec ':vs '.ZDIR<cr>
