@@ -45,9 +45,17 @@ fun! s:pickDir(line)
 endfun
 
 
+" cd to the selected path
+fun! s:InteractiveCd(cmd)
+    let content = getline('.')
+    let ZDIR = <SID>pickDir(content)
+    q
+    silent exec a:cmd . ' ' . ZDIR
+    echo ZDIR
+endfun
+
 " Create an interactive non-modifiable buffer with the list of
 " directories that match the regexes passed if any.
-
 fun! s:InteractiveList(...)
   " Set up window and buffer
   10new
@@ -76,10 +84,9 @@ fun! s:InteractiveList(...)
   " NOTE: These mappings might not be final. I'll have to check out some
   "       best practises. Also the mapping itself is pretty ugly.
 
-  noremap <buffer> <silent> <enter> :exec ':let ZDIR=<SID>pickDir("'.getline(".").'")'<cr>:q<cr>:exec 'cd '.ZDIR<cr>
-  noremap <buffer> <silent> <LeftRelease> :exec ':let ZDIR=<SID>pickDir("'.getline(".").'")'<cr>:q<cr>:exec ':new '.ZDIR<cr>
-  noremap <buffer> <silent> <c-o> :exec ':let ZDIR=<SID>pickDir("'.getline(".").'")'<cr>:q<cr>:exec ':new '.ZDIR<cr>
-  noremap <buffer> <silent> <c-s> :exec ':let ZDIR=<SID>pickDir("'.getline(".").'")'<cr>:q<cr>:exec ':vs '.ZDIR<cr>
+  noremap <buffer> <silent> <enter> :call <SID>InteractiveCd('cd')<cr>
+  noremap <buffer> <silent> v :call <SID>InteractiveCd('vs')<cr>
+  noremap <buffer> <silent> s :call <SID>InteractiveCd('sp')<cr>
 endfun
 
 
@@ -94,6 +101,7 @@ fun! s:QuickJump(...)
   endtry
   let directory = s:pickDir(info)
   exec 'cd '.directory
+  echo directory
 endfun
 
 
